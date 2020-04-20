@@ -87,12 +87,96 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Stack
+    s=Stack()
+    global fnd
+    fnd=False
+    corr=list()
+    current=problem.getStartState()
+    def dfs(vertex):
+        global fnd
+        if problem.isGoalState(vertex):
+            fnd=True
+        else:
+            if(vertex not in corr):
+                corr.append(vertex)
+            for v in problem.getSuccessors(vertex):
+                if fnd == True:
+                    break
+                if(  v[0] not in corr):
+                    s.push(v[1])
+                    dfs(v[0])
+                    if fnd == True:
+                        break
+                    else:
+                        s.pop()
+    dfs(current)
+    path=[]
+    while not s.isEmpty():
+        path.insert(0,s.pop())
+    
+    return path
+
+    "util.raiseNotDefined()"
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from game import Directions
+    fnd=False
+    corr=list()
+    vertex=problem.getStartState()
+    q = util.Queue()
+    l = util.Queue()
+    q.push(vertex)
+    if problem.isGoalState(vertex):
+        fnd=True
+    else:
+        if(vertex not in corr):
+            corr.append(vertex)
+        while not q.isEmpty() and not fnd:
+            j=q.pop()
+            for v in problem.getSuccessors(j):
+                if problem.isGoalState(v[0]):
+                    fnd=True
+                    l.push(v)
+                    break
+                else:
+                    if v[0] not in corr:
+                        corr.append(v[0])
+                        q.push(v[0])
+                        l.push(v)
+
+    path=[]
+    p=[]
+    while not l.isEmpty():
+        path.insert(0,l.pop())
+    x=path[0]
+    y=x[1]
+    y3=x[0]
+    p.insert(0,y)
+    while True:
+        zzz=0
+        y=x[1]
+        y2=x[0]
+        if Directions.WEST ==y:
+            y3=(y2[0]+1,y2[1])
+        if Directions.EAST ==y:
+            y3=(y2[0]-1,y2[1])
+        if Directions.NORTH ==y:
+            y3=(y2[0],y2[1]-1)
+        if Directions.SOUTH ==y:
+            y3=(y2[0],y2[1]+1)
+        for v in path:
+            if(v[0]==y3):
+                p.insert(0,v[1])
+                x=v
+                zzz=1
+        if zzz is not 1:
+            break
+        
+    return p
+    "util.raiseNotDefined()"
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
