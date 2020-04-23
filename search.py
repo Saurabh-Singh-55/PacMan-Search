@@ -89,99 +89,96 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     from util import Stack
     s=Stack()
-    global fnd
-    fnd=False
-    corr=list()
-    current=problem.getStartState()
-    def dfs(vertex):
-        global fnd
-        if problem.isGoalState(vertex):
-            fnd=True
-        else:
-            if(vertex not in corr):
-                corr.append(vertex)
-            for v in problem.getSuccessors(vertex):
-                if fnd == True:
-                    break
-                if(  v[0] not in corr):
-                    s.push(v[1])
-                    dfs(v[0])
-                    if fnd == True:
-                        break
-                    else:
-                        s.pop()
-    dfs(current)
-    path=[]
+    visited_state=list()
+    start=problem.getStartState()
+    data=[[start],[],0]
+    s.push(data)
     while not s.isEmpty():
-        path.insert(0,s.pop())
+        current=s.pop()
+        current_node=current[0][-1]
+        if problem.isGoalState(current_node):
+            return current[1]
+        for leaf in problem.getSuccessors(current_node):
+            next_state=leaf[0]
+            next_direction=leaf[1]
+            next_cost=leaf[2]
+            if next_state not in visited_state:
+                visited_state.append(next_state)
+                next_states=current[0][:]
+                next_states.append(next_state)
+                next_directions=current[1][:]
+                next_directions.append(next_direction)
+                new_cost=current[2]+next_cost
+                next_data=[next_states,next_directions,new_cost]
+                s.push(next_data)
     
-    return path
-
+    return []
     "util.raiseNotDefined()"
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    from game import Directions
-    fnd=False
-    corr=list()
-    vertex=problem.getStartState()
-    q = util.Queue()
-    l = util.Queue()
-    q.push(vertex)
-    if problem.isGoalState(vertex):
-        fnd=True
-    else:
-        if(vertex not in corr):
-            corr.append(vertex)
-        while not q.isEmpty() and not fnd:
-            j=q.pop()
-            for v in problem.getSuccessors(j):
-                if problem.isGoalState(v[0]):
-                    fnd=True
-                    l.push(v)
-                    break
-                else:
-                    if v[0] not in corr:
-                        corr.append(v[0])
-                        q.push(v[0])
-                        l.push(v)
-
-    path=[]
-    p=[]
-    while not l.isEmpty():
-        path.insert(0,l.pop())
-    x=path[0]
-    y=x[1]
-    y3=x[0]
-    p.insert(0,y)
-    while True:
-        zzz=0
-        y=x[1]
-        y2=x[0]
-        if Directions.WEST ==y:
-            y3=(y2[0]+1,y2[1])
-        if Directions.EAST ==y:
-            y3=(y2[0]-1,y2[1])
-        if Directions.NORTH ==y:
-            y3=(y2[0],y2[1]-1)
-        if Directions.SOUTH ==y:
-            y3=(y2[0],y2[1]+1)
-        for v in path:
-            if(v[0]==y3):
-                p.insert(0,v[1])
-                x=v
-                zzz=1
-        if zzz is not 1:
-            break
-        
-    return p
+    from util import Queue
+    s=Queue()
+    visited_state=list()
+    start=problem.getStartState()
+    data=[[start],[],0]
+    s.push(data)
+    while not s.isEmpty():
+        current=s.pop()
+        current_node=current[0][-1]
+        if problem.isGoalState(current_node):
+            return current[1]
+        for leaf in problem.getSuccessors(current_node):
+            next_state=leaf[0]
+            next_direction=leaf[1]
+            next_cost=leaf[2]
+            if next_state not in visited_state:
+                visited_state.append(next_state)
+                next_states=current[0][:]
+                next_states.append(next_state)
+                next_directions=current[1][:]
+                next_directions.append(next_direction)
+                new_cost=current[2]+next_cost
+                next_data=[next_states,next_directions,new_cost]
+                s.push(next_data)
+    
+    return []
     "util.raiseNotDefined()"
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+    s=PriorityQueue()
+    visited_state=list()
+    start=problem.getStartState()
+    data=[[start],[],0]
+    s.push(data,0)
+    while not s.isEmpty():
+        current=s.pop()
+        current_node=current[0][-1]
+        if problem.isGoalState(current_node):
+            return current[1]
+        for leaf in problem.getSuccessors(current_node):
+            next_state=leaf[0]
+            next_direction=leaf[1]
+            next_cost=leaf[2]
+            if next_state not in visited_state:
+                if not problem.isGoalState(next_state):
+                    visited_state.append(next_state)
+                next_states=current[0][:]
+                next_states.append(next_state)
+                next_directions=current[1][:]
+                next_directions.append(next_direction)
+                new_cost=current[2]+next_cost
+                next_data=[next_states,next_directions,new_cost]
+                s.push(next_data,new_cost)
+    
+    return []
+
+    "util.raiseNotDefined()"
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -193,6 +190,34 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    from util import PriorityQueue
+    s=PriorityQueue()
+    visited_state=list()
+    start=problem.getStartState()
+    data=[[start],[],0]
+    s.push(data,0)
+    while not s.isEmpty():
+        current=s.pop()
+        current_node=current[0][-1]
+        if problem.isGoalState(current_node):
+            return current[1]
+        for leaf in problem.getSuccessors(current_node):
+            next_state=leaf[0]
+            next_direction=leaf[1]
+            next_cost=leaf[2]
+            if next_state not in visited_state:
+                if not problem.isGoalState(next_state):
+                    visited_state.append(next_state)
+                next_states=current[0][:]
+                next_states.append(next_state)
+                next_directions=current[1][:]
+                next_directions.append(next_direction)
+                new_cost=current[2]+next_cost
+                next_Heuristic = heuristic(next_state, problem)
+                next_data=[next_states,next_directions,new_cost]
+                s.push(next_data,new_cost+next_Heuristic)
+    
+    return []
     util.raiseNotDefined()
 
 
