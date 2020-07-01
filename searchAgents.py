@@ -380,7 +380,14 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    xy1 = state[0]
+    xy2 = state[1]
+    x=0
+    for v in xy2:
+        y=abs(xy1[0] - v[0]) + abs(xy1[1] - v[1])
+        if(x<y):
+            x=y
+    return x 
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -472,9 +479,16 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+   
     position, foodGrid = state
+    x1=0
+    y=0
+    for v in foodGrid.asList():
+        y=mazeDistance(position,v,problem.startingGameState)
+        if(x1<y):
+            x1=y
+    return x1
     "*** YOUR CODE HERE ***"
-    return 0
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -503,6 +517,32 @@ class ClosestDotSearchAgent(SearchAgent):
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
+        from util import Queue
+        s=Queue()
+        start=startPosition
+        visited_state=[start]
+        data=[[start],[],0]
+        s.push(data)
+        while not s.isEmpty():
+            current=s.pop()
+            current_node=current[0][-1]
+            if food[current_node[0]][current_node[1]]==True:
+                return current[1]
+            for leaf in problem.getSuccessors(current_node):
+                next_state=leaf[0]
+                next_direction=leaf[1]
+                next_cost=leaf[2]
+                if next_state not in visited_state:
+                    visited_state.append(next_state)
+                    next_states=current[0][:]
+                    next_states.append(next_state)
+                    next_directions=current[1][:]
+                    next_directions.append(next_direction)
+                    new_cost=current[2]+next_cost
+                    next_data=[next_states,next_directions,new_cost]
+                    s.push(next_data)
+        
+        return []
 
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()

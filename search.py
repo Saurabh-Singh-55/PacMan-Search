@@ -89,8 +89,8 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     from util import Stack
     s=Stack()
-    visited_state=list()
     start=problem.getStartState()
+    visited_state=[start]
     data=[[start],[],0]
     s.push(data)
     while not s.isEmpty():
@@ -120,8 +120,8 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     from util import Queue
     s=Queue()
-    visited_state=list()
     start=problem.getStartState()
+    visited_state=[start]
     data=[[start],[],0]
     s.push(data)
     while not s.isEmpty():
@@ -151,8 +151,8 @@ def uniformCostSearch(problem):
     "*** YOUR CODE HERE ***"
     from util import PriorityQueue
     s=PriorityQueue()
-    visited_state=list()
     start=problem.getStartState()
+    visited_state=[start]
     data=[[start],[],0]
     s.push(data,0)
     while not s.isEmpty():
@@ -192,8 +192,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     from util import PriorityQueue
     s=PriorityQueue()
-    visited_state=list()
     start=problem.getStartState()
+    visited_state=[start]
     data=[[start],[],0]
     s.push(data,0)
     while not s.isEmpty():
